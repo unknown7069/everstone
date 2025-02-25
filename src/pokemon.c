@@ -4438,6 +4438,9 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
 
     if (evolutions == NULL)
         return SPECIES_NONE;
+	
+	if (FlagGet(FLAG_DISABLE_EVOLVE))
+        return SPECIES_NONE;
 
     if (tradePartner != NULL)
     {
