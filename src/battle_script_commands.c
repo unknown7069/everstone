@@ -16306,6 +16306,8 @@ void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBat
 
         *expAmount = value + 1;
     }
+    // for testing - delete later 
+    *expAmount = (*expAmount * 150);
 }
 
 void BS_ItemRestoreHP(void)
