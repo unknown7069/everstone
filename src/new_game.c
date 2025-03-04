@@ -45,6 +45,7 @@
 #include "mystery_gift.h"
 #include "union_room_chat.h"
 #include "constants/items.h"
+#include "script_pokemon_util.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 
@@ -206,6 +207,7 @@ void NewGameInitData(void)
     ResetTrainerHillResults();
     ResetContestLinkResults();
     ResetItemFlags();
+    CreateStarterMon();
 }
 
 static void ResetMiniGamesRecords(void)

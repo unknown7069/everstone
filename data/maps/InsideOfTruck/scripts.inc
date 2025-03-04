@@ -14,11 +14,21 @@ InsideOfTruck_OnResume:
 	end
 
 InsideOfTruck_EventScript_SetIntroFlags::
-	lockall
-	setflag FLAG_HIDE_MAP_NAME_POPUP
-	checkplayergender
-	goto_if_eq VAR_RESULT, MALE, InsideOfTruck_EventScript_SetIntroFlagsMale
-	goto_if_eq VAR_RESULT, FEMALE, InsideOfTruck_EventScript_SetIntroFlagsFemale
+	setflag FLAG_SYS_POKEMON_GET
+	setflag FLAG_ADVENTURE_STARTED
+	setflag FLAG_SYS_POKEDEX_GET
+	special SetUnlockedPokedexFlags
+	setflag FLAG_RECEIVED_POKEDEX_FROM_BIRCH
+	setvar VAR_CABLE_CLUB_TUTORIAL_STATE, 2
+	setflag FLAG_SYS_NATIONAL_DEX
+	special EnableNationalPokedex
+	setflag FLAG_RECEIVED_RUNNING_SHOES
+	setflag FLAG_SYS_B_DASH
+	setvar VAR_LITTLEROOT_TOWN_STATE, 4 @ 4: Received Running Shoes
+	setvar VAR_LITTLEROOT_INTRO_STATE, 7 @ 7: Told to go meet rival
+	setvar VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 2 @ 2: Met Rival's Mom (and is corresponding gender)
+	setvar VAR_LITTLEROOT_HOUSES_STATE_MAY, 2 @ 2: Met Rival's Mom (and is corresponding gender)
+	setvar VAR_LITTLEROOT_RIVAL_STATE, 4 @ 4: Received Pokedex
 	end
 
 InsideOfTruck_EventScript_SetIntroFlagsMale::
