@@ -207,7 +207,7 @@
       "width": 60,
       "height": 60,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
+      "secondary_tileset": "gTileset_Mauville",
       "border_filepath": "data/layouts/Route105/border.bin",
       "blockdata_filepath": "data/layouts/Route105/map.bin"
     },
@@ -237,7 +237,7 @@
       "width": 60,
       "height": 60,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Cave",
+      "secondary_tileset": "gTileset_Mauville",
       "border_filepath": "data/layouts/Route108/border.bin",
       "blockdata_filepath": "data/layouts/Route108/map.bin"
     },
@@ -247,7 +247,7 @@
       "width": 60,
       "height": 60,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Rustboro",
+      "secondary_tileset": "gTileset_Mauville",
       "border_filepath": "data/layouts/Route109/border.bin",
       "blockdata_filepath": "data/layouts/Route109/map.bin"
     },
@@ -307,7 +307,7 @@
       "width": 60,
       "height": 60,
       "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Lavaridge",
+      "secondary_tileset": "gTileset_Fortree",
       "border_filepath": "data/layouts/Route115/border.bin",
       "blockdata_filepath": "data/layouts/Route115/map.bin"
     },

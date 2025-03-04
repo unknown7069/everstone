@@ -14,19 +14,19 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_ROUTE113",
-      "offset": -60,
-      "direction": "up"
-    },
-    {
-      "map": "MAP_LAVARIDGE_TOWN",
-      "offset": 40,
+      "map": "MAP_ROUTE116",
+      "offset": 0,
       "direction": "left"
     },
     {
-      "map": "MAP_ROUTE111",
-      "offset": -20,
+      "map": "MAP_ROUTE108",
+      "offset": 0,
       "direction": "right"
+    },
+    {
+      "map": "MAP_ROUTE111",
+      "offset": 0,
+      "direction": "down"
     }
   ],
   "object_events": [
@@ -257,7 +257,9 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+
+  ],
   "bg_events": [
     {
       "type": "sign",

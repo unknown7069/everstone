@@ -15,13 +15,18 @@
   "connections": [
     {
       "map": "MAP_VERDANTURF_TOWN",
-      "offset": 80,
+      "offset": 66,
       "direction": "down"
     },
     {
-      "map": "MAP_RUSTBORO_CITY",
+      "map": "MAP_ROUTE115",
       "offset": 0,
-      "direction": "left"
+      "direction": "down"
+    },
+    {
+      "map": "MAP_ROUTE112",
+      "offset": 0,
+      "direction": "right"
     }
   ],
   "object_events": [
