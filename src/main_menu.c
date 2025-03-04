@@ -231,6 +231,11 @@ void CreateYesNoMenuParameterized(u8, u8, u16, u16, u8, u8);
 static void Task_NewGameBirchSpeech_SlidePlatformAway2(u8);
 static void Task_NewGameBirchSpeech_ReshowBirchLotad(u8);
 static void Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter(u8);
+static void Task_NewGameBirchSpeech_StarterPokemon(u8 taskId);
+static void Task_NewGameBirchSpeech_ChooseStarter(u8 taskId);
+static void PickRandomPokemon();
+static u8 NewGameBirchSpeech_CreateLotadSprite(u8 x, u8 y, u16 species);
+static void Task_NewGameBirchSpeech_WaitToShowStarterMenu(u8 taskId);
 static void Task_NewGameBirchSpeech_AreYouReady(u8);
 static void Task_NewGameBirchSpeech_ShrinkPlayer(u8);
 static void SpriteCB_MovePlayerDownWhileShrinking(struct Sprite *);
@@ -1302,6 +1307,7 @@ static void Task_NewGameBirchSpeech_Init(u8 taskId)
     ResetSpriteData();
     FreeAllSpritePalettes();
     ResetAllPicSprites();
+    PickRandomPokemon();
     AddBirchSpeechObjects(taskId);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
     gTasks[taskId].tBG1HOFS = 0;
@@ -1393,7 +1399,7 @@ static void Task_NewGameBirchSpeechSub_InitPokeBall(u8 taskId)
     gSprites[spriteId].invisible = FALSE;
     gSprites[spriteId].data[0] = 0;
 
-    CreatePokeballSpriteToReleaseMon(spriteId, gSprites[spriteId].oam.paletteNum, 112, 58, 0, 0, 32, PALETTES_BG, SPECIES_LOTAD);
+    CreatePokeballSpriteToReleaseMon(spriteId, gSprites[spriteId].oam.paletteNum, 112, 58, 0, 0, 32, PALETTES_BG, gSaveBlock2Ptr->playTimeHours);
     gTasks[taskId].func = Task_NewGameBirchSpeechSub_WaitForLotad;
     gTasks[sBirchSpeechMainTaskId].tTimer = 0;
 }
@@ -1686,6 +1692,7 @@ static void Task_NewGameBirchSpeech_ReshowBirchLotad(u8 taskId)
         gSprites[spriteId].y = 60;
         gSprites[spriteId].invisible = FALSE;
         gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+        // draw pokemon 
         spriteId = gTasks[taskId].tLotadSpriteId;
         gSprites[spriteId].x = 100;
         gSprites[spriteId].y = 75;
@@ -1696,9 +1703,62 @@ static void Task_NewGameBirchSpeech_ReshowBirchLotad(u8 taskId)
         NewGameBirchSpeech_ClearWindow(0);
         StringExpandPlaceholders(gStringVar4, gText_Birch_YourePlayer);
         AddTextPrinterForMessage(TRUE);
-        gTasks[taskId].func = Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter;
+        gTasks[taskId].func = Task_NewGameBirchSpeech_StarterPokemon;
     }
 }
+
+// pick gender 
+// pick name 
+// pick starter - choose random number, step until we are at a baby 
+// brich appears, throws pokemon 
+
+static void Task_NewGameBirchSpeech_StarterPokemon(u8 taskId)
+{
+    NewGameBirchSpeech_ClearWindow(0);
+    StringExpandPlaceholders(gStringVar4, gText_Birch_StarterPokemon);
+    NewGameBirchSpeech_ShowDialogueWindow(0, 1);
+    gTasks[taskId].func = Task_NewGameBirchSpeech_WaitToShowStarterMenu;
+}
+
+static void Task_NewGameBirchSpeech_WaitToShowStarterMenu(u8 taskId)
+{
+    if (!RunTextPrintersAndIsPrinter0Active())
+    {
+        CreateYesNoMenuParameterized(2, 1, 0xF3, 0xDF, 2, 15);
+        gTasks[taskId].func = Task_NewGameBirchSpeech_ChooseStarter;
+    }
+}
+
+static void Task_NewGameBirchSpeech_ChooseStarter(u8 taskId)
+{
+    u16 lotadSpriteId;
+    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    {
+        case 0:
+            PlaySE(SE_SELECT);
+            gSpecialVar_Result = gSaveBlock2Ptr->playTimeHours;
+            gSaveBlock2Ptr->playTimeHours = 0;  // reset play time
+            NewGameBirchSpeech_ClearWindow(0);  // clear text box 
+            gTasks[taskId].func = Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter;
+            break;
+        case MENU_B_PRESSED:
+        case 1:  // no 
+            PlaySE(SE_SELECT);
+            // pick new starter 
+            PickRandomPokemon();
+            // TODO - delete old sprite 
+            gSprites[gTasks[taskId].tLotadSpriteId].invisible = TRUE;
+            // load new starter sprite 
+            lotadSpriteId = NewGameBirchSpeech_CreateLotadSprite(100, 0x4B, gSaveBlock2Ptr->playTimeHours);
+            gTasks[taskId].tLotadSpriteId = lotadSpriteId;
+            // go back to the start
+            // TODO - make a task to release a new poke from the ball 
+            gTasks[taskId].func = Task_NewGameBirchSpeech_ReshowBirchLotad;
+            break;
+    }
+}
+
+// TODO - also set the clock 
 
 static void Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter(u8 taskId)
 {
@@ -1893,9 +1953,15 @@ static void SpriteCB_MovePlayerDownWhileShrinking(struct Sprite *sprite)
     sprite->data[0] = y;
 }
 
-static u8 NewGameBirchSpeech_CreateLotadSprite(u8 x, u8 y)
+static void PickRandomPokemon()
 {
-    return CreateMonPicSprite_Affine(SPECIES_LOTAD, FALSE, 0, MON_PIC_AFFINE_FRONT, x, y, 14, TAG_NONE);
+    gSaveBlock2Ptr->playTimeHours = Random() % 100;
+}
+
+static u8 NewGameBirchSpeech_CreateLotadSprite(u8 x, u8 y, u16 species)
+{
+    // TODO - shiny odds 
+    return CreateMonPicSprite_Affine(species, FALSE, 0, MON_PIC_AFFINE_FRONT, x, y, 14, TAG_NONE);
 }
 
 static void AddBirchSpeechObjects(u8 taskId)
@@ -1910,7 +1976,7 @@ static void AddBirchSpeechObjects(u8 taskId)
     gSprites[birchSpriteId].oam.priority = 0;
     gSprites[birchSpriteId].invisible = TRUE;
     gTasks[taskId].tBirchSpriteId = birchSpriteId;
-    lotadSpriteId = NewGameBirchSpeech_CreateLotadSprite(100, 0x4B);
+    lotadSpriteId = NewGameBirchSpeech_CreateLotadSprite(100, 0x4B, gSaveBlock2Ptr->playTimeHours);
     gSprites[lotadSpriteId].callback = SpriteCB_Null;
     gSprites[lotadSpriteId].oam.priority = 0;
     gSprites[lotadSpriteId].invisible = TRUE;
