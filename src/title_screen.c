@@ -599,7 +599,7 @@ void CB2_InitTitleScreen(void)
         LZ77UnCompVram(gTitleScreenPokemonLogoGfx, (void *)(BG_CHAR_ADDR(0)));
         LZ77UnCompVram(gTitleScreenPokemonLogoTilemap, (void *)(BG_SCREEN_ADDR(9)));
         LoadPalette(gTitleScreenBgPalettes, BG_PLTT_ID(0), 15 * PLTT_SIZE_4BPP);
-        // bg3
+        // bg3 - nuke later 
         LZ77UnCompVram(sTitleScreenRayquazaGfx, (void *)(BG_CHAR_ADDR(2)));
         LZ77UnCompVram(sTitleScreenRayquazaTilemap, (void *)(BG_SCREEN_ADDR(26)));
         // bg1
@@ -757,7 +757,7 @@ static void Task_TitleScreenPhase2(u8 taskId)
                                     | DISPCNT_BG2_ON
                                     | DISPCNT_OBJ_ON);
         CreatePressStartBanner(START_BANNER_X, 108);
-        CreateCopyrightBanner(START_BANNER_X, 148);
+        // CreateCopyrightBanner(START_BANNER_X, 148);
         gTasks[taskId].tBg1Y = 0;
         gTasks[taskId].func = Task_TitleScreenPhase3;
     }
@@ -854,16 +854,11 @@ static void CB2_GoToBerryFixScreen(void)
     }
 }
 
+
 static void UpdateLegendaryMarkingColor(u8 frameNum)
 {
     if ((frameNum % 4) == 0) // Change color every 4th frame
     {
-        s32 intensity = Cos(frameNum, 128) + 128;
-        s32 r = 31 - ((intensity * 32 - intensity) / 256);
-        s32 g = 31 - (intensity * 22 / 256);
-        s32 b = 12;
-
-        u16 color = RGB(r, g, b);
-        LoadPalette(&color, BG_PLTT_ID(14) + 15, sizeof(color));
+        TintPlttBuffer(BG_PLTT_ID(14) + 15, 5, 5, 5);
    }
 }
