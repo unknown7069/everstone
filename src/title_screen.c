@@ -857,8 +857,12 @@ static void CB2_GoToBerryFixScreen(void)
 
 static void UpdateLegendaryMarkingColor(u8 frameNum)
 {
-    if ((frameNum % 4) == 0) // Change color every 4th frame
+    if ((frameNum % 8) == 0) // Change color every 4th frame
     {
-        TintPlttBuffer(BG_PLTT_ID(14) + 15, 1, 1, 1);
-   }
+        
+        TintPalette_RaindbowShift(BG_PLTT_ID(12) + 15);
+        TintPalette_RaindbowShift(BG_PLTT_ID(13) + 15);
+        TintPalette_RaindbowShift(BG_PLTT_ID(14) + 15); // main yellow 
+        TintPalette_RaindbowShift(BG_PLTT_ID(15) + 15);
+    }
 }

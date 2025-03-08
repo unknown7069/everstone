@@ -694,6 +694,42 @@ void TintPalette_CustomTone(u16 *palette, u32 count, u16 rTone, u16 gTone, u16 b
     }
 }
 
+void TintPalette_RaindbowShift(u32 selectedPalettes)
+{
+    u16 paletteOffset = 0;
+
+    while (selectedPalettes)
+    {
+        if (selectedPalettes & 1)
+        {
+            u32 i;
+            for (i = 0; i < 16; i++)
+            {
+                struct PlttData *data = (struct PlttData *)&gPlttBufferFaded[paletteOffset + i];
+
+                data->r = 0.989871835341472 * data->r + -0.09519173979102 * data->g + 0.105319904449554 * data->b;
+                data->g = 0.105319904449554 * data->r + 0.989871835341472 * data->g + -0.09519173979102 * data->b;
+                data->b = -0.09519173979102 * data->r + 0.105319904449554 * data->g + 0.989871835341472 * data->b;
+
+                if (data->r > 31)
+                    data->r = 0;
+                if (data->g > 31)
+                    data->g = 0;
+                if (data->b > 31)
+                    data->b = 0;
+                if (data->r < 0)
+                    data->r = 0;
+                if (data->g < 0)
+                    data->g = 0;
+                if (data->b < 0)
+                    data->b = 0;
+            }
+        }
+        selectedPalettes >>= 1;
+        paletteOffset += 16;
+    }
+}
+
 #define tCoeff       data[0]
 #define tCoeffTarget data[1]
 #define tCoeffDelta  data[2]
