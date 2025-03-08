@@ -859,6 +859,6 @@ static void UpdateLegendaryMarkingColor(u8 frameNum)
 {
     if ((frameNum % 4) == 0) // Change color every 4th frame
     {
-        TintPlttBuffer(BG_PLTT_ID(14) + 15, 5, 5, 5);
+        TintPlttBuffer(BG_PLTT_ID(14) + 15, 1, 1, 1);
    }
 }
