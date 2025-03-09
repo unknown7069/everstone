@@ -707,10 +707,11 @@ void TintPalette_RaindbowShift(u32 selectedPalettes)
             {
                 struct PlttData *data = (struct PlttData *)&gPlttBufferFaded[paletteOffset + i];
 
-                data->r = 0.989871835341472 * data->r + -0.09519173979102 * data->g + 0.105319904449554 * data->b;
-                data->g = 0.105319904449554 * data->r + 0.989871835341472 * data->g + -0.09519173979102 * data->b;
-                data->b = -0.09519173979102 * data->r + 0.105319904449554 * data->g + 0.989871835341472 * data->b;
+                data->r = 0.989871835341472 * data->r + -0.09519173979102 * data->g + 0.105319904449554 * data->b + 0.5;
+                data->g = 0.105319904449554 * data->r + 0.989871835341472 * data->g + -0.09519173979102 * data->b + 0.5;
+                data->b = -0.09519173979102 * data->r + 0.105319904449554 * data->g + 0.989871835341472 * data->b + 0.5;
 
+                // if this is an int, this is pointless 
                 if (data->r > 31)
                     data->r = 0;
                 if (data->g > 31)
