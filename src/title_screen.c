@@ -805,12 +805,6 @@ static void Task_TitleScreenPhase3(u8 taskId)
     {
         SetGpuReg(REG_OFFSET_BG2Y_L, 0);
         SetGpuReg(REG_OFFSET_BG2Y_H, 0);
-        if (++gTasks[taskId].tCounter & 1)
-        {
-            gTasks[taskId].tBg1Y++;
-            gBattle_BG1_Y = gTasks[taskId].tBg1Y / 2;
-            gBattle_BG1_X = 0;
-        }
         UpdateLegendaryMarkingColor(gTasks[taskId].tCounter);
         if ((gMPlayInfo_BGM.status & 0xFFFF) == 0)
         {
